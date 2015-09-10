@@ -1,6 +1,8 @@
 # TitiArduinoPeli
 
-Videopeli Arduinolle, joka käyttää TVout-kirjastoa. Pelissä ohjaat Ti-ti nallea, joka yrittää pyydystää taivaalta putoavia rusetteja. Peli nopeutuu mitä pidemmälle pelaat, joten ole tarkkana.
+Videopeli jossa ohjaat Ti-ti nallea, joka yrittää pyydystää taivaalta putoavia rusetteja. Peli nopeutuu mitä pidemmälle pelaat, joten ole tarkkana.
+
+Videopeli on rakennettu Arduino-alustalle, eli se on tavallaan alkeellinen videopelikonsoli. Peli käyttää TVout-kirjastoa, jolla tuotetaan videosignaali ja ääntä. Peli on siis kytkettävissä tavallisimpiin televisoihin (joissa on pyöreä keltainen RCA-pistoke videosisääntulolle).
 
 ## Rauta
 
