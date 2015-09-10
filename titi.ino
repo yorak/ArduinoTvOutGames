@@ -20,6 +20,8 @@ TVout TV;
 
 #define INITIAL_SPEED 10
 #define PADDLE_DEAD_ZONE_LOW 256
+// potentiometer game paddle input
+#define POTPIN 2
 
 // SPRITES 
 PROGMEM const unsigned char COLLECT_SPRITE[] = {
@@ -48,11 +50,10 @@ NOTE_c, NREST, NOTE_c, NREST, NOTE_c, NREST, NOTE_c, NREST, NOTE_c, NREST,
 NOTE_d, NREST, NOTE_e, NREST, NOTE_f, NREST, NOTE_f, NREST,
 NOTE_sml_b, NREST, NOTE_sml_b, NREST, NOTE_sml_b, NREST, NOTE_sml_b, NREST, NOTE_c, NREST, NOTE_d, NREST,
 NOTE_e, NREST, NREST, // custom row. remove if continue the score
+// These notes are currently not in use. If you want longer song, uncomment.
 //NOTE_e, NREST, NREST, NOTE_g, NREST, NOTE_e, NREST,
 //NOTE_c, NREST, NOTE_c, NREST, NOTE_c, NREST, NOTE_c, NREST, NOTE_c, NREST,
 //NOTE_d, NREST, NOTE_e, NREST, NOTE_f, NREST, NOTE_f, NREST, NOTE_f, NREST, NOTE_d, NREST, 
-//NOTE_sml_b, NREST, NOTE_sml_b, NREST, NOTE_sml_b, NREST, NOTE_sml_b, NREST, NOTE_c, NREST, NOTE_d, NREST,
-//200,           50,         90,    20,         90, 
 NREST};
 PROGMEM const int scoredelays[] = {100, 25, 100, 25, 
 200, 50, 200, 50, 250, 100, 25, 100, 25,
@@ -61,6 +62,7 @@ PROGMEM const int scoredelays[] = {100, 25, 100, 25,
 100, 25, 200, 50, 100,  25, 450, 50,
 200,  50, 90,  20, 90,  50, 90, 20, 90,  50, 200,  50,
 200, 50, 500, // custom row. remove if continue the score
+// These are currently not in use. If you want longer song, uncomment with the notes above.
 //200, 50, 500, 100, 25, 100, 25,
 //200, 50, 200, 50, 100, 25, 200, 50, 100, 25,
 //100, 25, 200, 50, 100,  25, 200, 50, 90, 20, 90, 50, 
@@ -68,8 +70,6 @@ PROGMEM const int scoredelays[] = {100, 25, 100, 25,
 10};
 # define NOTE_COUNT 55
 
-// potentiometer game paddle input
-#define POTPIN 2
 
 // GAME STATE
 int state = 0;
@@ -85,6 +85,7 @@ char strscore[6] = "00000";
 
 int i; // your generic loop variable
 
+// Music playing score-keeping
 int nextnotetime = 0;
 int looptime = 0;
 int noteidx = 0;
@@ -95,13 +96,11 @@ void setup() {
   TV.begin(_PAL, SCREEN_WIDTH, SCREEN_HEIGHT);
   TV.clear_screen();
   TV.select_font(font6x8);
-  //Serial.begin(9600);
-//  TV.fill(1);
+  //Serial.begin(9600); // Uncomment for debug
 }
 
-int read_paddle_pos()
-{
-    // max is used b/c my potentiometer was nonlinear, this migitates the "slow" range
+int read_paddle_pos() {
+  // max and normalization is used b/c my potentiometer was nonlinear, this trick disables the "slow" range
   return max(PADDLE_DEAD_ZONE_LOW, analogRead(POTPIN))-PADDLE_DEAD_ZONE_LOW;  
 }
 
@@ -110,50 +109,50 @@ void loop() {
   // PLAY MUSIC
   if (state>0 && state<3) {
     looptime = millis();
-    if (looptime>=nextnotetime)
-    {
+    if (looptime>=nextnotetime) {
       note = pgm_read_word_near(scorenotes+noteidx);
       duration = pgm_read_word_near(scoredelays+noteidx)-cspeed*2;
-//      if ( note!=0 )
-      if (note>200 && note<1000 && duration>10) // FOR DEBUG (PROTECTS YOUR EARS)
-      {
+      // if REST, do not to play the sound (ALSO PROTECTS YOUR EARS)
+      if (note>200 && note<1000 && duration>10) { 
         TV.tone(note, duration);
       }
+      
+      // Uncomment serial printing for debugging
       //Serial.print(note);
       //Serial.print(",");
       //Serial.println(duration);
+      
       nextnotetime = looptime+(int)duration;
       noteidx++;
-      if (noteidx>NOTE_COUNT) noteidx=0;
+      if (noteidx>NOTE_COUNT) {
+        noteidx=0;
+      }
     }
   }
   
-  // GAME INTRO
+  // GAME INTRO STATE
   if (state==0) {
     delay(500);
     TV.clear_screen();
     TV.print(SCREEN_WIDTH/5,SCREEN_HEIGHT/4,"TI-TI' PELI");
     TV.bitmap(2*SCREEN_WIDTH/5, SCREEN_HEIGHT/2, POT_GUIDE);
     val = read_paddle_pos();
-    //Serial.print(val);
     state+=1;
     return; // EXIT LOOP
   } 
-  // wait user input
-  else if (state==1){
+  // WAIT USER INPUT STATE
+  else if (state==1) {
     newval = read_paddle_pos();
-    //Serial.print(val);
-    if (abs(val-newval)>5)
-    {
+    if (abs(val-newval)>10) {
       state+=1;
     }
     return;
   }
-  // state == 2 -> game state. Continue 
   
-  // 1. END CONDITION
-  if (lives==0)
-  {
+  // state == 2 -> GAME STATE (ALL STEPS 1-5 BELOW)
+  
+  // 1. CHECK FOR END CONDITION
+  if (lives==0) {
     TV.print(SCREEN_WIDTH-33,0, strscore);
     TV.print(SCREEN_WIDTH/4,SCREEN_HEIGHT/2,"GAME OVER");
     TV.noTone();
@@ -162,9 +161,8 @@ void loop() {
   }
   TV.clear_screen();
   
-  // 2. LIVES AND SCORE
-  for (i = 0 ; i < lives ; i++)
-  {
+  // 2. DRAW LIVES AND SCORE
+  for (i = 0 ; i < lives ; i++) {
     TV.bitmap(8*i, 0, HEART_SPRITE);
   }
   TV.print(SCREEN_WIDTH-33,0, strscore);
@@ -173,37 +171,34 @@ void loop() {
   TV.bitmap(cxpos, cypos, COLLECT_SPRITE);
   cypos+=max(1,cspeed/4);
   
-  // 4. PLAYER 
+  // 4. DRAW PLAYER 
   newval = read_paddle_pos();    // read the value from the sensor
   // Prevent jitter
-  if (abs(val-newval)>2)
-  {
+  if (abs(val-newval)>2) {
     val = newval;
     pxpos = (int)((SCREEN_WIDTH-16)*(float)val/(1024-PADDLE_DEAD_ZONE_LOW));
   }
   TV.bitmap(pxpos, SCREEN_HEIGHT-17, PLAYER_SPRITE);
     
+  // 5. CHECK FOR FALLING THINGS HITTING THE FLOOR
   // if collectible has fallen down
-  if (cypos>=(SCREEN_HEIGHT-COLLECT_SPRITE[1]))
-  { 
-    // On top of each other, player collected the object
+  if (cypos>=(SCREEN_HEIGHT-COLLECT_SPRITE[1])) { 
+    // Player and thing are on top of each other,
+    // -> player collected the object
     int d = abs((cxpos+COLLECT_SPRITE[0]/2)-(pxpos+PLAYER_SPRITE[0]/2));
-    if (d<PLAYER_SPRITE[0]/2)
-    {
+    if (d<PLAYER_SPRITE[0]/2) {
       score+=100*cspeed;
       sprintf(strscore, "%05lu", score);
       cspeed+=1;
     }
-    else
-    {
-      lives-=1;
+    else {
+      // Oops, player failed to catch the thing
       
-      if (lives==0)
-      {
+      lives-=1;
+      if (lives==0) {
          TV.clear_screen();
       }
     }
-    
     cxpos = random(0, SCREEN_WIDTH-COLLECT_SPRITE[0]/2);
     cypos = 0;
   }
