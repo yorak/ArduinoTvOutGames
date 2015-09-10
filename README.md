@@ -26,7 +26,7 @@ Tarvitset Arduino-alustan ATmega 328P mikrokontrollerilla. Käytännössä siis 
 | Vastuksia (470, 1k) |	0,04 € | 300 kpl erässä |
 | 2 x RCA littimiä | 0,20 € | 10 kpl erässä |
 | johdonpätkiä | 0,24 €  | 40 kpl erässä |
-| **yhteensä** | 2,87 €	 | |
+| **yhteensä** | **2,87 €**	 | |
 
 
 ### Kytkentä
