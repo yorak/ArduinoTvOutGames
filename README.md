@@ -1,6 +1,10 @@
 # TitiArduinoPeli
 
-Videopeli Arduinolle, joka käyttää TVout-kirjastoa. Pelissä ohjaat Ti-ti nallea, joka yrittää pyydystää taivaalta putoavia rusetteja. Peli nopeutuu mitä pidemmälle pelaat, joten ole tarkkana.
+Videopeli jossa ohjaat Ti-ti nallea, joka yrittää pyydystää taivaalta putoavia rusetteja. Peli nopeutuu mitä pidemmälle pelaat, joten ole tarkkana.
+
+[![Video Ti-ti -videopelistä](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/titi_yt_play.png)](https://www.youtube.com/watch?v=6_DM1g7a03M)
+
+Videopeli on rakennettu Arduino-alustalle, eli se on tavallaan alkeellinen videopelikonsoli. Osat maksavat Kiinasta tilattuna ja kotiinkuljetettuina alle 5 euroa. Peli käyttää TVout-kirjastoa, jolla tuotetaan videosignaali ja ääntä. Peli on siis kytkettävissä tavallisimpiin televisoihin (joissa on pyöreä keltainen RCA-pistoke videosisääntulolle).
 
 ## Rauta
 
@@ -24,7 +28,7 @@ Tarvitset Arduino-alustan ATmega 328P mikrokontrollerilla. Käytännössä siis 
 | Vastuksia (470, 1k) |	0,04 € | 300 kpl erässä |
 | 2 x RCA littimiä | 0,20 € | 10 kpl erässä |
 | johdonpätkiä | 0,24 €  | 40 kpl erässä |
-| **yhteensä** | 2,87 €	 | |
+| **yhteensä** | **2,87 €**	 | |
 
 
 ### Kytkentä
