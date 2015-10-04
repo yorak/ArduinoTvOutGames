@@ -1,9 +1,8 @@
-// catch
-
 #include <TVout.h>
 #include <fontALL.h>
 TVout TV;
 
+// Music note frequencies //
 #define  NREST 0
 #define  NOTE_sml_b 246
 #define  NOTE_c 261
@@ -15,15 +14,22 @@ TVout TV;
 #define  NOTE_b 493 
 #define  NOTE_C 523
 
-#define SCREEN_WIDTH 112
-#define SCREEN_HEIGHT 112
-
-#define INITIAL_SPEED 10
-#define PADDLE_DEAD_ZONE_LOW 256
+// Hardware defines //
+#if defined(__AVR_ATmega168__)
+  #define SCREEN_WIDTH 80
+  #define SCREEN_HEIGHT 72
+#else 
+  #define SCREEN_WIDTH 112
+  #define SCREEN_HEIGHT 112
+#endif 
 // potentiometer game paddle input
 #define POTPIN 2
+#define PADDLE_DEAD_ZONE_LOW 256
 
-// SPRITES 
+#define INITIAL_SPEED 10
+
+// SPRITE BITMAPS //
+// (note!: resides in program memory)
 PROGMEM const unsigned char COLLECT_SPRITE[] = {
 5,5, 0x88,0xD8,0xF8,0xD8,0x88};
 PROGMEM const unsigned char HEART_SPRITE[] = {
@@ -41,7 +47,8 @@ PROGMEM const unsigned char POT_GUIDE[] = {
 0x1F,0xF8,0x0F,0xF0,0x3E,0x7C,0x3E,0x7C,
 0x0F,0xF0,0x1F,0xF8,0x09,0x90,0x01,0x80};
 
-// SONG
+// THE SONG //
+// (note!: resides in program memory)
 PROGMEM const int scorenotes[]     =
 {NOTE_g, NREST, NOTE_e, NREST, 
 NOTE_c, NREST, NOTE_c, NREST, NREST, NOTE_g, NREST, NOTE_e, NREST,
@@ -49,11 +56,7 @@ NOTE_c, NREST, NOTE_c, NREST, NREST, NOTE_g, NREST, NOTE_e, NREST,
 NOTE_c, NREST, NOTE_c, NREST, NOTE_c, NREST, NOTE_c, NREST, NOTE_c, NREST,
 NOTE_d, NREST, NOTE_e, NREST, NOTE_f, NREST, NOTE_f, NREST,
 NOTE_sml_b, NREST, NOTE_sml_b, NREST, NOTE_sml_b, NREST, NOTE_sml_b, NREST, NOTE_c, NREST, NOTE_d, NREST,
-NOTE_e, NREST, NREST, // custom row. remove if continue the score
-// These notes are currently not in use. If you want longer song, uncomment.
-//NOTE_e, NREST, NREST, NOTE_g, NREST, NOTE_e, NREST,
-//NOTE_c, NREST, NOTE_c, NREST, NOTE_c, NREST, NOTE_c, NREST, NOTE_c, NREST,
-//NOTE_d, NREST, NOTE_e, NREST, NOTE_f, NREST, NOTE_f, NREST, NOTE_f, NREST, NOTE_d, NREST, 
+NOTE_e, NREST, NREST,
 NREST};
 PROGMEM const int scoredelays[] = {100, 25, 100, 25, 
 200, 50, 200, 50, 250, 100, 25, 100, 25,
@@ -61,20 +64,15 @@ PROGMEM const int scoredelays[] = {100, 25, 100, 25,
 200, 50, 200, 50, 100, 25, 200, 50, 100, 25,
 100, 25, 200, 50, 100,  25, 450, 50,
 200,  50, 90,  20, 90,  50, 90, 20, 90,  50, 200,  50,
-200, 50, 500, // custom row. remove if continue the score
-// These are currently not in use. If you want longer song, uncomment with the notes above.
-//200, 50, 500, 100, 25, 100, 25,
-//200, 50, 200, 50, 100, 25, 200, 50, 100, 25,
-//100, 25, 200, 50, 100,  25, 200, 50, 90, 20, 90, 50, 
-// 1000};
+200, 50, 500,
 10};
 # define NOTE_COUNT 55
 
 
-// GAME STATE
+// GAME STATE //
 int state = 0;
-int val = 0;  // paddle position
-int newval = 0;
+int val = 0;  // paddle (potentiometer) position
+int newval = 0; // new paddle (potentiometer) position
 int pxpos = SCREEN_WIDTH/2; // player position
 int cxpos = random(0, SCREEN_WIDTH-COLLECT_SPRITE[0]/2);
 int cypos = 0;
@@ -100,13 +98,13 @@ void setup() {
 }
 
 int read_paddle_pos() {
-  // max and normalization is used b/c my potentiometer was nonlinear, this trick disables the "slow" range
+  // max and normalization is used b/c my potentiometer was nonlinear, this ignores the "slow" range
   return max(PADDLE_DEAD_ZONE_LOW, analogRead(POTPIN))-PADDLE_DEAD_ZONE_LOW;  
 }
 
 void loop() { 
-
-  // PLAY MUSIC
+  
+  // PLAY MUSIC //
   if (state>0 && state<3) {
     looptime = millis();
     if (looptime>=nextnotetime) {
@@ -118,9 +116,7 @@ void loop() {
       }
       
       // Uncomment serial printing for debugging
-      //Serial.print(note);
-      //Serial.print(",");
-      //Serial.println(duration);
+      //Serial.print(note); Serial.print(","); Serial.println(duration);
       
       nextnotetime = looptime+(int)duration;
       noteidx++;
@@ -130,17 +126,18 @@ void loop() {
     }
   }
   
-  // GAME INTRO STATE
+  
+  // GAME INTRO STATE //
   if (state==0) {
     delay(500);
     TV.clear_screen();
-    TV.print(SCREEN_WIDTH/5,SCREEN_HEIGHT/4,"TI-TI' PELI");
+    TV.print(SCREEN_WIDTH/2-6*5,SCREEN_HEIGHT/4,"TI-TI' PELI");
     TV.bitmap(2*SCREEN_WIDTH/5, SCREEN_HEIGHT/2, POT_GUIDE);
     val = read_paddle_pos();
     state+=1;
     return; // EXIT LOOP
   } 
-  // WAIT USER INPUT STATE
+  // WAIT USER INPUT STATE //
   else if (state==1) {
     newval = read_paddle_pos();
     if (abs(val-newval)>10) {
@@ -149,7 +146,8 @@ void loop() {
     return;
   }
   
-  // state == 2 -> GAME STATE (ALL STEPS 1-5 BELOW)
+  // state == 2 ->
+  // GAME STATE (ALL STEPS 1-5 BELOW) //
   
   // 1. CHECK FOR END CONDITION
   if (lives==0) {
@@ -159,6 +157,9 @@ void loop() {
     state=3;
     return; // EXIT LOOP
   }
+  
+  // Wait for vblank to avoid flicker
+  TV.delay_frame(1);
   TV.clear_screen();
   
   // 2. DRAW LIVES AND SCORE
@@ -193,7 +194,6 @@ void loop() {
     }
     else {
       // Oops, player failed to catch the thing
-      
       lives-=1;
       if (lives==0) {
          TV.clear_screen();
@@ -203,6 +203,7 @@ void loop() {
     cypos = 0;
   }
   
+  // Speed up the game as more collectibles are catched
   delay(max(5,INITIAL_SPEED-cspeed));
 }
 
