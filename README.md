@@ -4,8 +4,8 @@ Videopelit on rakennettu Arduino-alustalle, jolloin siitä tulee tavallaan alkee
 
 Alla kolme neljä toteutettua videopeliä.
 
-| [![Video Ti-ti -videopelistä](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/titi_yt_play.png)](https://www.youtube.com/watch?v=6_DM1g7a03M) | |
-| Videopeli jossa ohjaat Ti-ti nallea, joka yrittää pyydystää taivaalta putoavia rusetteja. Peli nopeutuu mitä pidemmälle pelaat, joten ole tarkkana. | |
+| [![Video Ti-ti -videopelistä](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/titi_yt_play.png)](https://www.youtube.com/watch?v=6_DM1g7a03M) | a |
+| Videopeli jossa ohjaat Ti-ti nallea, joka yrittää pyydystää taivaalta putoavia rusetteja. Peli nopeutuu mitä pidemmälle pelaat, joten ole tarkkana. | a |
 
 ## Rauta
 
