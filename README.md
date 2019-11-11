@@ -7,7 +7,7 @@ Alla kolme neljä toteutettua videopeliä.
 | Peli | nimi | kuvaus |
 | ---- | ---- | ------ |
 | [![Video Ti-ti -videopelistä](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/titi_yt_play.png)](https://www.youtube.com/watch?v=6_DM1g7a03M) | titi | Videopeli jossa ohjaat Ti-ti nallea, joka yrittää pyydystää taivaalta putoavia rusetteja. Peli nopeutuu mitä pidemmälle pelaat, joten ole tarkkana. |
-| [![Ruudunkaappaus skorssista](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/skorssi.png)]() | skorssi | 8-bittinen kaksinpeliversio klassisesta Scorched earth DOS-pelistä. Tuhoutuva maasto, mittarit ja monenlaista muuta hienoa. |
+| [![Ruudunkaappaus skorssista](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/skorssi.jpg)]() | skorssi | 8-bittinen kaksinpeliversio klassisesta Scorched earth DOS-pelistä. Tuhoutuva maasto, mittarit ja monenlaista muuta hienoa. |
 
 ## Rauta
 
