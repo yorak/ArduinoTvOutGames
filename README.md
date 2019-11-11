@@ -2,12 +2,13 @@
 
 Videopelit on rakennettu Arduino-alustalle, jolloin siitä tulee tavallaan alkeellinen videopelikonsoli. Osat maksavat Kiinasta tilattuna ja kotiinkuljetettuina alle 3 euroa. Peli käyttää [TVout-kirjastoa](https://github.com/Avamander/arduino-tvout), jolla tuotetaan komposiittivideosignaali ja ääntä. Peli on siis kytkettävissä tavallisimpiin televisoihin (joissa on pyöreä keltainen RCA-pistoke videosisääntulolle).
 
-Alla kolme neljä toteutettua videopeliä.
+Alla kolme-neljä toteutettua videopeliä.
 
 | Peli | nimi | kuvaus |
 | ---- | ---- | ------ |
 | [![Video Ti-ti -videopelistä](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/titi_yt_play.png)](https://www.youtube.com/watch?v=6_DM1g7a03M) | titi | Videopeli jossa ohjaat Ti-ti nallea, joka yrittää pyydystää taivaalta putoavia rusetteja. Peli nopeutuu mitä pidemmälle pelaat, joten ole tarkkana. |
 | [![Ruudunkaappaus skorssista](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/skorssi.jpg)]() | skorssi | 8-bittinen kaksinpeliversio klassisesta Scorched earth DOS-pelistä. Tuhoutuva maasto, mittarit ja monenlaista muuta hienoa. |
+| [![Ruudunkaappaus matopelistä](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/snake.jpg)]() | snake | Vanha kunnon matopeli, jossa mato tosin ei pääse venymään kovin pitkäksi ennekö bugi katkaisee sen keskeltä. |
 
 ## Rauta
 
