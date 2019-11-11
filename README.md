@@ -4,22 +4,21 @@ Videopelit on rakennettu Arduino-alustalle, jolloin siitä tulee tavallaan alkee
 
 Alla kolme neljä toteutettua videopeliä.
 
-[![Video Ti-ti -videopelistä](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/titi_yt_play.png)](https://www.youtube.com/watch?v=6_DM1g7a03M)
-
-
-Videopeli jossa ohjaat Ti-ti nallea, joka yrittää pyydystää taivaalta putoavia rusetteja. Peli nopeutuu mitä pidemmälle pelaat, joten ole tarkkana.
-
+| Peli | nimi | kuvaus |
+| ---- | ---- | ------ |
+| [![Video Ti-ti -videopelistä](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/titi_yt_play.png)](https://www.youtube.com/watch?v=6_DM1g7a03M) | titi | Videopeli jossa ohjaat Ti-ti nallea, joka yrittää pyydystää taivaalta putoavia rusetteja. Peli nopeutuu mitä pidemmälle pelaat, joten ole tarkkana. |
+| [![Ruudunkaappaus skorssista](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/skorssi.png)]() | skorssi | 8-bittinen kaksinpeliversio klassisesta Scorched earth DOS-pelistä. Tuhoutuva maasto, mittarit ja monenlaista muuta hienoa. |
 
 ## Rauta
 
-Tarvitset Arduino-alustan ATmega 328P mikrokontrollerilla. Käytännössä siis Arduno Duemilanoven tai Unon. Lisäksi:
+Tarvitset Arduino-alustan ATmega 328P -mikrokontrollerilla ja USB-liittimellä. Käytännössä siis Arduno Unon tai Nanon. Lisäksi:
 * 3 kpl 470 ohmin vastusta
 * 1 kpl 1 kilohmin vastus
-* 2 kpl naaras-RCA-liitintä
+* 2 kpl uros-RCA-liitintä, ruuvi- tai painoterminaaleilla
 * 1 kpl potentiometriä (säätövastus)
+* 3 kpl painonappeja
 * johdonpätkiä
-* 5V USB-laturi
-* 1 kpl RCA johto
+* USB-johto
 
 ### Hinta-arvio
 
@@ -41,24 +40,23 @@ Piirrän kytkennästä kuvan joskus jos kerkeän tai viimeistään joku kysyy, m
 * https://noperation.wordpress.com/2012/11/27/arduino-starfield/
 * https://www.arduino.cc/en/Tutorial/Potentiometer
 
-
 Yhteenvetona: 
+* Komposiittivideon RCA-liittimeen kolme johtoa:
+  * vaippaan GND
+  * sisemmästä kaksi: 1 kohm - PIN_D9 ja 470 ohm - PIN_D7
+* Audio-RCA-liittimeen kaksi johtoa:
+  * vaippaan GND
+  * sisemmästä 470 ohm - PIN_D11
 * Säätövastukselta järjestyksessä kolme johtoa:
   * 5V
   * 470 ohm - PIN_A2
   * GND
-* Komposiittivideon RCA-liittimeen kolme johtoa:
-  * vaippaan GND
-  * sisemmästä kaksi: 1 kohm - PIN_9 (PWM) ja 470 ohm - PIN_7
-* Audio-RCA-liittimeen kaksi johtoa:
-  * vaippaan GND
-  * sisemmästä 470 ohm - PIN_11
-
 
 ## Softa
 
-Pelin lähdekoodi (n. 200 riviä) löytyy tästä säilöstä (eng. *repository*). Olen yrittänyt käyttää kuvaavia muuttujannimiä ja kommentteja hyvien ohjelmointikäytäntöjen mukaisesti, joten koodista pitäisi saada hyvin selvää. Lähdekoodin kieli tosin on englanti.
+Pelien lähdekoodi (n. 100-200 riviä per peli) löytyy tästä säilöstä (eng. *repository*) `games`-kansiosta. Olen yrittänyt käyttää kuvaavia muuttujannimiä ja kommentteja hyvien ohjelmointikäytäntöjen mukaisesti, joten koodista pitäisi saada hyvin selvää. Lähdekoodin kieli tosin on englanti, mutta mitään vaikeaa ammattislangia ei pitäisi olla käytetty.
 
 Joitain huomioita ja opittua:
-* Bittikartat ja musiikkidata kannttaa laittaa PROGMEM-makrolla flash-muistiin, jotta ne eivät turhaan vie SRAM:ia, joka on melkein kokonaisuudessaan ruudulle piirrettävän ruutupuskurin (eng. *framebuffer*) käytössä. Jos tämän unohtaa tehdä, saattaa muisti loppua ja peli toimia odottamattomalla tavalla.
+* Bittikartat ja musiikkidata tulee laittaa PROGMEM-makrolla flash-muistiin, jotta ne eivät turhaan vie SRAM:ia, joka on melkein kokonaisuudessaan ruudulle piirrettävän ruutupuskurin (eng. *framebuffer*) käytössä. Jos tämän unohtaa tehdä, saattaa muisti loppua ja peli toimia odottamattomalla tavalla.
 * Oma säätövastukseni ei ollut lineaarinen tai sitten lineaarisuus menetettiin analogisen arvon digitalisoinnissa. Etsin säätövastukselta miltei lineaarisen alueen ja rajoitin hahmon liikkumaan vain säätimen ollessa ko. alueella.
+* Piirrettäessä ruudun reunojen lähelle tulee olla tarkkana, ettei TVout-kirjaston piirtokomennot ylikirjoita muistista jotain muuta.
