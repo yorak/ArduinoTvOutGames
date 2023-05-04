@@ -9,11 +9,9 @@ TVout TV;
 
 const int TURN_LEFT_BTN_PIN = 2;
 const int TURN_RIGHT_BTN_PIN = 3;
-const int GAME_SPEED = 7500;
+const long GAME_SPEED = 30000L;
 
-int loop_counter = 0;
-bool left_turn_pending = false;
-bool right_turn_pending = false;
+long loop_counter = 0;
 
 int snake_head_x = 0;
 int snake_head_y = 0;
@@ -35,17 +33,15 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
  
-  // controls 
-  if (digitalRead(TURN_LEFT_BTN_PIN)==LOW) left_turn_pending = true;
-  if (digitalRead(TURN_RIGHT_BTN_PIN)==LOW) right_turn_pending = true;
-
   // ignore most of the loops
   loop_counter = loop_counter+1;
   if (loop_counter<GAME_SPEED) return;
   else loop_counter = 0;
 
-  // turn if there are pending turns
-  turn_as_needed();
+  // controls, turn if there are pending turns
+  turn_as_needed(
+    digitalRead(TURN_LEFT_BTN_PIN)==LOW,
+    digitalRead(TURN_RIGHT_BTN_PIN)==LOW);
   
   // head slithers on
   snake_head_x = snake_head_x+snake_dx;
@@ -67,17 +63,15 @@ void loop() {
   TV.set_pixel(snake_head_x, snake_head_y, WHITE);
 }
 
-void turn_as_needed() {
+void turn_as_needed(bool left_turn, bool right_turn) {
   int new_snake_dx = 0; int new_snake_dy = 0;
-  if (left_turn_pending) {
+  if (left_turn) {
     new_snake_dx = -snake_dy; new_snake_dy = snake_dx;
     snake_dx = new_snake_dx; snake_dy = new_snake_dy;
-    left_turn_pending = false;
   }
-  if (right_turn_pending) {
+  if (right_turn) {
     new_snake_dx = snake_dy; new_snake_dy = -snake_dx;
     snake_dx = new_snake_dx; snake_dy = new_snake_dy;
-    right_turn_pending = false;
   }
 }
 
