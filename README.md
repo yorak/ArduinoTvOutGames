@@ -39,9 +39,9 @@ You will need an Arduino board with an ATmega328P microcontroller, e.g., an Ardu
 
 ### Circuit
 
-[Schematic](images/schematic.png)
+![Schematic](images/schematic.png)
 
-[Connections](images/connections.jpg)
+![Wiring](images/wiring.png)
 
 The connection instructions and schematic do not include the paddle controller or audio output. Consult the textual instructions below.
 
