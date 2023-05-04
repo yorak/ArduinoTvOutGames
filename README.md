@@ -1,63 +1,58 @@
-# Arduino pelejä
+# Some Arduino Games
 
-Videopelit on rakennettu Arduino-alustalle, jolloin siitä tulee tavallaan alkeellinen videopelikonsoli. Osat maksavat Kiinasta tilattuna ja kotiinkuljetettuina alle 3 euroa. Peli käyttää [TVout-kirjastoa](https://github.com/Avamander/arduino-tvout), jolla tuotetaan komposiittivideosignaali ja ääntä. Peli on siis kytkettävissä tavallisimpiin televisoihin (joissa on pyöreä keltainen RCA-pistoke videosisääntulolle).
+Here are some simple video games that have been written for the Arduino-tvout platform. Just few resistors make a n Arduino a primitive video game console. The parts cost less than 6 euros when ordered from China. The game uses the [TVout library](https://github.com/Avamander/arduino-tvout) to produce a black-and-white composite video signal and sound. Therefore, the game can be connected to the most common televisions (with a yellow RCA plug for video input).
 
-Alla kolme-neljä toteutettua videopeliä.
+Below is a list of currently implemented video games.
 
-| Peli | nimi | kuvaus |
-| ---- | ---- | ------ |
-| [![Video Ti-ti -videopelistä](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/titi_yt_play.png)](https://www.youtube.com/watch?v=6_DM1g7a03M) | titi | Videopeli jossa ohjaat Ti-ti nallea, joka yrittää pyydystää taivaalta putoavia rusetteja. Peli nopeutuu mitä pidemmälle pelaat, joten ole tarkkana. |
-| [![Ruudunkaappaus skorssista](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/skorssi.jpg)]() | skorssi | 8-bittinen kaksinpeliversio klassisesta Scorched earth DOS-pelistä. Tuhoutuva maasto, mittarit ja monenlaista muuta hienoa. |
-| [![Ruudunkaappaus matopelistä](https://raw.githubusercontent.com/juherask/TitiArduinoPeli/master/images/snake.jpg)]() | snake | Vanha kunnon matopeli, jossa mato tosin ei pääse venymään kovin pitkäksi ennekö bugi katkaisee sen keskeltä. |
+| Game | Name | Description |
+| ---- | ---- | ----------- |
+| [![Screenshot from the Ti-ti video game](images/titi_yt_play.png)](https://www.youtube.com/watch?v=6_DM1g7a03M) | ti-ti | A video game in which you control Ti-ti bear, who tries to catch falling ribbons from the sky. The game speeds up the further you play, so be careful. With music! |
+| [![Screenshot from Scorched Earth](images/skorssi.jpg)]() | scorched earth | An 8-bit two-player version of the classic Scorched Earth DOS game. Destructible terrain, gauges, and many other cool features. |
+| [![Screenshot from Snake](images/snake.jpg)]() | snake | The good old Snake game, although the snake doesn't get very long before a bug cuts it in half (please consider making a pull request to straghten the snake out) |
+| [![Screenshot from Breakout](images/breakout.jpg)]() | breakout | Breakout clone. This one was written by AI (ChatGPT4), but I had to iron out some issues. Perfectly playable.|
+| [![Screenshot from Flappy Ball](images/flappy.jpg)]() | flappy | Not a Flappy bird, but a flappy ball.|
 
-## Rauta
+## Hardware
 
-Tarvitset Arduino-alustan ATmega 328P -mikrokontrollerilla ja USB-liittimellä. Käytännössä siis Arduno Unon tai Nanon. Lisäksi:
-* 3 kpl 470 ohmin vastusta
-* 1 kpl 1 kilohmin vastus
-* 2 kpl uros-RCA-liitintä, ruuvi- tai painoterminaaleilla
-* 1 kpl potentiometriä (säätövastus)
-* 3 kpl painonappeja
-* johdonpätkiä
-* USB-johto
+You will need an Arduino board with an ATmega328P microcontroller, e.g., an Arduino Uno or Nano. Additionally, you'll need:
 
-### Hinta-arvio
+* 3x 470 ohm resistors
+* 1x 1 kilohm resistor
+* 2x male RCA connectors with screw or pressure terminals
+* 1x potentiometer (adjustable resistor) AND/OR
+* 3x push buttons
+* some lengths of wire
+* USB cable or other way of programming and powering the board
 
-(hinnat ebaystä tilaten)
+### Cost estimate
 
-| Nimike | Hinta | Huomioita |
-| ------ | ----- | --------- |
-| Arduino /w 328p | 2,17 €	|	Mini-USB Nano V3.0 ATmega328P Arduino board |
-| Säätövastus | 0,23 € | 10 kpl erässä |
-| Vastuksia (470, 1k) |	0,04 € | 300 kpl erässä |
-| 2 x RCA littimiä | 0,20 € | 10 kpl erässä |
-| johdonpätkiä | 0,24 €  | 40 kpl erässä |
-| **yhteensä** | **2,87 €**	 | |
+(prices for ordering from eBay in 2016 or so)
 
+| Item | Price | Notes |
+| ---- | ----- | ----- |
+| Arduino /w 328p | 2.17 € | Mini-USB Nano V3.0 ATmega328P Arduino board |
+| Potentiometer | 0.23 € | 10 pcs. in a batch |
+| Resistors (470, 1k) | 0.04 € | 300 pcs. in a batch |
+| 2x RCA connectors | 0.20 € | 10 pcs. in a batch |
+| Wires | 0.24 € | 40 pcs. in a batch |
+| **Total** | **2.87 €** | |
 
-### Kytkentä
-Piirrän kytkennästä kuvan joskus jos kerkeän tai viimeistään joku kysyy, mutta sitä odotellessa, laitan alkuperäislähteet omalle kytkennälleni. Niilläkin jo pärjää:
-* https://code.google.com/p/arduino-tvout/
-* https://noperation.wordpress.com/2012/11/27/arduino-starfield/
-* https://www.arduino.cc/en/Tutorial/Potentiometer
+### Circuit
 
-Yhteenvetona: 
-* Komposiittivideon RCA-liittimeen kolme johtoa:
-  * vaippaan GND
-  * sisemmästä kaksi: 1 kohm - PIN_D9 ja 470 ohm - PIN_D7
-* Audio-RCA-liittimeen kaksi johtoa:
-  * vaippaan GND
-  * sisemmästä 470 ohm - PIN_D11
-* Säätövastukselta järjestyksessä kolme johtoa:
+[Schematic](images/schematic.png)
+
+[Connections](images/connections.jpg)
+
+The connection instructions and schematic do not include the paddle controller or audio output. Consult the textual instructions below.
+
+In summary:
+* Composite video RCA connector to three wires:
+  * Shield to GND
+  * Inner two wires: 1k ohm - PIN_D9 and 470 ohm - PIN_D7
+* Audio (mono) RCA connector to two wires:
+  * Shield to GND
+  * Inner 470 ohm - PIN_D11
+* For the optional paddle controller / potentiometer connect three wires:
   * 5V
   * 470 ohm - PIN_A2
   * GND
-
-## Softa
-
-Pelien lähdekoodi (n. 100-200 riviä per peli) löytyy tästä säilöstä (eng. *repository*) `games`-kansiosta. Olen yrittänyt käyttää kuvaavia muuttujannimiä ja kommentteja hyvien ohjelmointikäytäntöjen mukaisesti, joten koodista pitäisi saada hyvin selvää. Lähdekoodin kieli tosin on englanti, mutta mitään vaikeaa ammattislangia ei pitäisi olla käytetty.
-
-Joitain huomioita ja opittua:
-* Bittikartat ja musiikkidata tulee laittaa PROGMEM-makrolla flash-muistiin, jotta ne eivät turhaan vie SRAM:ia, joka on melkein kokonaisuudessaan ruudulle piirrettävän ruutupuskurin (eng. *framebuffer*) käytössä. Jos tämän unohtaa tehdä, saattaa muisti loppua ja peli toimia odottamattomalla tavalla.
-* Oma säätövastukseni ei ollut lineaarinen tai sitten lineaarisuus menetettiin analogisen arvon digitalisoinnissa. Etsin säätövastukselta miltei lineaarisen alueen ja rajoitin hahmon liikkumaan vain säätimen ollessa ko. alueella.
-* Piirrettäessä ruudun reunojen lähelle tulee olla tarkkana, ettei TVout-kirjaston piirtokomennot ylikirjoita muistista jotain muuta.
