@@ -22,9 +22,13 @@ TVout TV;
   #define SCREEN_WIDTH 112
   #define SCREEN_HEIGHT 112
 #endif 
-// potentiometer game paddle input
+
+// potentiometer game paddle input (A2)
 #define POTPIN 2
 #define PADDLE_DEAD_ZONE_LOW 256
+
+const int TURN_LEFT_BTN_PIN = 2;
+const int TURN_RIGHT_BTN_PIN = 3;
 
 #define INITIAL_SPEED 10
 
@@ -80,6 +84,7 @@ int cspeed = 1; // collectible fall speed
 int lives = 3;
 unsigned long score = 0l;
 char strscore[6] = "00000";
+bool button_controls = false;
 
 int i; // your generic loop variable
 
@@ -94,12 +99,39 @@ void setup() {
   TV.begin(_PAL, SCREEN_WIDTH, SCREEN_HEIGHT);
   TV.clear_screen();
   TV.select_font(font6x8);
+
+  pinMode(TURN_LEFT_BTN_PIN, INPUT_PULLUP); // float pin high
+  pinMode(TURN_RIGHT_BTN_PIN, INPUT_PULLUP); // float pin high
   //Serial.begin(9600); // Uncomment for debug
 }
 
 int read_paddle_pos() {
-  // max and normalization is used b/c my potentiometer was nonlinear, this ignores the "slow" range
+  if (digitalRead(TURN_LEFT_BTN_PIN)==LOW) {
+    pxpos-=cspeed;
+    button_controls=true;
+  }
+  if (digitalRead(TURN_RIGHT_BTN_PIN)==LOW) {
+    pxpos+=cspeed;
+    button_controls=true;
+  }
+  if (!button_controls) {
+    // max and normalization is used b/c my potentiometer was nonlinear, this ignores the "slow" range
   return max(PADDLE_DEAD_ZONE_LOW, analogRead(POTPIN))-PADDLE_DEAD_ZONE_LOW;  
+  }
+  
+  return pxpos;
+}
+
+int read_button_pdx() {
+  if (digitalRead(TURN_LEFT_BTN_PIN)==LOW) {
+    button_controls=true;
+    return -cspeed;
+  }
+  if (digitalRead(TURN_RIGHT_BTN_PIN)==LOW) {
+    button_controls=true;
+    return cspeed;
+  }
+  return 0;
 }
 
 void loop() { 
@@ -154,7 +186,21 @@ void loop() {
     TV.print(SCREEN_WIDTH-33,0, strscore);
     TV.print(SCREEN_WIDTH/4,SCREEN_HEIGHT/2,"GAME OVER");
     TV.noTone();
-    state=3;
+    TV.delay(250);
+    if (state!=3) {
+      val = read_paddle_pos();
+      state=3;
+    }
+    if ((button_controls && read_button_pdx()!=0)||
+        (!button_controls && abs(val-read_paddle_pos())>10)) {
+      pxpos = SCREEN_WIDTH/2;
+      cypos = 0;
+      cspeed = 1;
+      lives = 3;
+      score = 0l;
+      state=0;
+    }
+    
     return; // EXIT LOOP
   }
   
@@ -173,12 +219,20 @@ void loop() {
   cypos+=max(1,cspeed/4);
   
   // 4. DRAW PLAYER 
-  newval = read_paddle_pos();    // read the value from the sensor
-  // Prevent jitter
-  if (abs(val-newval)>2) {
-    val = newval;
-    pxpos = (int)((SCREEN_WIDTH-16)*(float)val/(1024-PADDLE_DEAD_ZONE_LOW));
+  int dpx = read_button_pdx();
+  // Still reading the paddle?
+  if (!button_controls) {
+    newval = read_paddle_pos();    // read the value from the sensor
+    // Prevent jitter
+    if (abs(val-newval)>2) {
+      val = newval;
+      pxpos = (int)((SCREEN_WIDTH-16)*(float)val/(1024-PADDLE_DEAD_ZONE_LOW));
+    }
+  } else {
+    pxpos = pxpos+dpx;
   }
+  pxpos = min(max(0,pxpos), SCREEN_WIDTH-PLAYER_SPRITE[0]);
+
   TV.bitmap(pxpos, SCREEN_HEIGHT-17, PLAYER_SPRITE);
     
   // 5. CHECK FOR FALLING THINGS HITTING THE FLOOR
@@ -206,4 +260,3 @@ void loop() {
   // Speed up the game as more collectibles are catched
   delay(max(5,INITIAL_SPEED-cspeed));
 }
-
